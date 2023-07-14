@@ -1,5 +1,9 @@
-import { createApp } from 'vue'
-import './style.css'
+import Vue from 'vue'
 import App from './App.vue'
+import 'leaflet/dist/leaflet.css';
 
-createApp(App).mount('#app')
+Vue.config.productionTip = false
+
+new Vue({
+  render: function (h) { return h(App) },
+}).$mount('#app')

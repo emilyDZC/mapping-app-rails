@@ -68,6 +68,7 @@ GEM
       tzinfo (~> 2.0)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
+    bson (4.15.0)
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
@@ -95,6 +96,15 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.18.1)
+    mongo (2.19.0)
+      bson (>= 4.14.1, < 5.0.0)
+    mongoid (8.1.1)
+      activemodel (>= 5.1, < 7.1, != 7.0.0)
+      concurrent-ruby (>= 1.0.5, < 2.0)
+      mongo (>= 2.18.0, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
+    mongoid-geospatial (5.1.0)
+      mongoid (>= 4.0.0)
     msgpack (1.7.1)
     net-imap (0.3.6)
       date
@@ -108,12 +118,16 @@ GEM
     nio4r (2.5.9)
     nokogiri (1.15.3-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.15.3-x86_64-linux)
+      racc (~> 1.4)
     puma (5.6.6)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.7)
     rack-cors (2.0.1)
       rack (>= 2.0.0)
+    rack-proxy (0.7.6)
+      rack
     rack-test (2.1.0)
       rack (>= 1.3)
     rails (7.0.6)
@@ -147,11 +161,19 @@ GEM
     rake (13.0.6)
     reline (0.3.6)
       io-console (~> 0.5)
+    ruby2_keywords (0.0.5)
+    semantic_range (3.0.0)
     sqlite3 (1.6.3-arm64-darwin)
+    sqlite3 (1.6.3-x86_64-linux)
     thor (1.2.2)
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    webpacker (5.4.4)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -159,15 +181,19 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
   debug
+  mongoid
+  mongoid-geospatial
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.6)
   sqlite3 (~> 1.4)
   tzinfo-data
+  webpacker
 
 RUBY VERSION
    ruby 3.2.2p53

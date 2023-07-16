@@ -1,51 +1,53 @@
 class PointsController < ApplicationController
-  before_action :set_point, only: %i[ show update destroy ]
+  before_action only: %i[ show ]
 
   # GET /points
   def index
     @points = Point.all
 
-    render json: @points
+    @featureCollection = {
+      "type": "FeatureCollection",
+      "features": @points
+    }
+
+    render json: @featureCollection
   end
 
-  # GET /points/1
+  # GET /points/single
   def show
+    @point = Point.where(
+      :"geometry" => {
+        :"$geoIntersects" => {
+          :"$geometry" => {
+            :type => "Point",
+            :coordinates => [params[:lat], params[:long]]
+          }
+        }
+      }
+    )
+    
     render json: @point
   end
 
   # POST /points
-  def create
-    @point = Point.new(point_params)
+  # def create
+  #   @point = Point.new(point_params)
 
-    if @point.save
-      render json: @point, status: :created, location: @point
-    else
-      render json: @point.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /points/1
-  def update
-    if @point.update(point_params)
-      render json: @point
-    else
-      render json: @point.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /points/1
-  def destroy
-    @point.destroy
-  end
+  #   if @point.save
+  #     render json: @point, status: :created, location: @point
+  #   else
+  #     render json: @point.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_point
-      @point = Point.find(params[:id])
-    end
+    # def set_point
+    #   @point = Point.find(params[:lat], params[:long])
+    # end
 
     # Only allow a list of trusted parameters through.
-    def point_params
-      params.require(:point).permit(:type, :properties, :geometry)
-    end
+    # def point_params
+    #   params.require(:point).permit(:lat, :long)
+    # end
 end

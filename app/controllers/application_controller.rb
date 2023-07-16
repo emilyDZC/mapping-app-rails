@@ -1,2 +1,4 @@
-class ApplicationController < ActionController::API
-end
+class ApplicationController < ActionController::Base
+    # before_action :authenticate_user!
+    # include MarkdownHelper
+  end

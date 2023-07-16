@@ -65,13 +65,31 @@ export default {
         }, 
         onEachFeatureFunction() { 
             return (feature, layer) => { 
-                layer.bindPopup(feature.properties.ADMIN); 
+                layer.bindPopup(this.formatPopup(feature.properties)); 
                 // layer.bindTooltip(feature.properties.ADMIN, { permanent: false, sticky: false } ); 
             };
         }
    },
+
+    methods: {
+        /**
+         * Format the pop data as an html string
+         */
+        formatPopup(obj) {
+          if (typeof obj == 'object') {
+            let html = '<div>';
+            for (let key in obj) {
+              html += `<p>${key}: ${obj[key]}</p>`
+            }
+            html += '</div>'
+            return html
+          } else {
+            return ''
+          }
+        }
+   },
   async created() {
-    const response = await axios.get(process.env.VUE_APP_BASE_URL + "/api/points");
+    const response = await axios.get(process.env.VUE_APP_BASE_URL + "/georegions");
     this.geojson = response.data;
   },
 

@@ -1,24 +1,40 @@
-# README
+# mapping-app-rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+To run this app, first fork the repo and `cd` into the root directory.
 
-Things you may want to cover:
+The backend and frontend need to be run separately, so open up two terminal windows.
 
-* Ruby version
+In the first terminal, run the following:
+```
+bundle install
+rails s
+```
 
-* System dependencies
+In the second terminal, do the following:
+```
+cd client
+npm i
+npm start
+```
 
-* Configuration
+The app should be available to view at `http://localhost:8080/`
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The api endpoint for a single pair of coordinates is `POST http://localhost:3000/georegions/single`. It queries a dataset of Geographical Regions.
+It receives a request body in the following format:
+```
+{
+    "lat": 53.3,
+    "long": 1.47
+}
+```
+It returns the feature properties as output eg.
+```
+{
+    "scalerank": 1,
+    "name": "BRITISH ISLES",
+    "namealt": null,
+    "region": "Europe",
+    "subregion": "British Isles",
+    "featureclass": "Island group"
+}
+```

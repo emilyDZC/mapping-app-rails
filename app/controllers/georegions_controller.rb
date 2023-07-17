@@ -13,20 +13,24 @@ class GeoregionsController < ApplicationController
       render json: @featureCollection
     end
   
-    # GET /georegions/single
+    # POST /georegions/single
     def show
       @georegion = Georegion.where(
         :"geometry" => {
           :"$geoIntersects" => {
             :"$geometry" => {
               :type => "Point",
-              :coordinates => [params[:lat], params[:long]]
+              :coordinates => [params[:long], params[:lat]]
             }
           }
         }
       )
   
-      render json: @georegion
+      if @georegion.any?
+        render json: @georegion[0].properties
+      else
+        render json: "Not found"
+      end
     end
 
     private

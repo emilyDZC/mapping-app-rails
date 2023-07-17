@@ -13,7 +13,7 @@ class PointsController < ApplicationController
     render json: @featureCollection
   end
 
-  # GET /points/single
+  # POST /points/single
   def show
     @point = Point.where(
       :"geometry" => {
@@ -29,16 +29,6 @@ class PointsController < ApplicationController
     render json: @point
   end
 
-  # POST /points
-  # def create
-  #   @point = Point.new(point_params)
-
-  #   if @point.save
-  #     render json: @point, status: :created, location: @point
-  #   else
-  #     render json: @point.errors, status: :unprocessable_entity
-  #   end
-  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

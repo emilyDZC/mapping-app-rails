@@ -1,9 +1,14 @@
 <template>
     <div class="map-container">
-        <l-map style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
+        <div style="height: 500px; width: 1000px; margin: 50px;" v-if="loading">Loading map...</div>
+        <l-map v-else style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker :lat-lng="markerLatLng"></l-marker>
-            <l-geo-json :visible="showLayer" :geojson="geojson" :options="options">
+            <l-geo-json :visible="showRiversLayer" :geojson="rivers" :options="riverOptions">
+            </l-geo-json>
+            <l-geo-json :visible="showRegionsLayer" :geojson="regions" :options="regionOptions">
+            </l-geo-json>
+            <l-geo-json :visible="showCrossbillsLayer" :geojson="crossbills" :options="regionOptions">
             </l-geo-json>
         </l-map>
     </div>
@@ -24,7 +29,9 @@ Icon.Default.mergeOptions({
 
 export default {
     props: {
-        showLayer: Boolean
+        showRiversLayer: Boolean,
+        showRegionsLayer: Boolean,
+        showCrossbillsLayer: Boolean
     },
   components: {
     LMap,
@@ -35,43 +42,60 @@ export default {
   },
   data () {
     return {
+      loading: false,
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       zoom: 5,
-      center: [53.383026, -1.505438],
-      markerLatLng: [53.383026, -1.505438],
+      center: [54.383026, -1.705438],
+      markerLatLng: [54.383026, -1.705438],
       data: [],
-      geojson: null,
-      fillColor: "#e4ce7f"
+      fillColor: "#e4ce7f",
+      regions: [],
+      rivers: [],
+      crossbills: []
     };
   },
 
    computed: { 
-        options() { 
-            return { onEachFeature: this.onEachFeatureFunction }; 
-        }, 
-        styleFunction() { 
-            const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor 
+        riverOptions() { 
+            return { onEachFeature: this.onEachFeatureFunction, style: this.riverStyle }; 
+        },
+        regionOptions() {
+            return { onEachFeature: this.onEachFeatureFunction, style: this.regionStyle }; 
+        },
+        riverStyle() { 
+            const fillColor = this.fillColor;
             return () => { 
                 return { 
                     weight: 2, 
-                    color: "#ECEFF1", 
+                    color: "#2a74f5", 
                     opacity: 1, 
-                    fillColor: fillColor, 
+                    // fillColor: fillColor, 
                     fillOpacity: 1 
                 }; 
             }; 
-        }, 
+        },
+        regionStyle() {
+            const fillColor = this.fillColor;
+            return () => { 
+                return { 
+                    weight: 2, 
+                    color: "#32ad38", 
+                    opacity: 1, 
+                    // fillColor: fillColor, 
+                    // fillOpacity: 1 
+                }; 
+            }; 
+        },
         onEachFeatureFunction() { 
             return (feature, layer) => { 
-                layer.bindPopup(this.formatPopup(feature.properties)); 
-                // layer.bindTooltip(feature.properties.ADMIN, { permanent: false, sticky: false } ); 
+                layer.bindPopup(this.formatPopup(feature.properties), {maxHeight: 200}); 
             };
         }
    },
 
-    methods: {
+   methods: {
         /**
          * Format the pop data as an html string
          */
@@ -86,11 +110,24 @@ export default {
           } else {
             return ''
           }
+        },
+
+        filterData(layer) {
+            return layer.features.filter(feature => {
+              return Number(feature.properties['individualCount']) > 0
+            })
         }
    },
+
   async created() {
-    const response = await axios.get(process.env.VUE_APP_BASE_URL + "/georegions");
-    this.geojson = response.data;
+    this.loading = true;
+    const rivers = await axios.get(process.env.VUE_APP_BASE_URL + "/points");
+    const regions = await axios.get(process.env.VUE_APP_BASE_URL + "/georegions");
+    const crossbills = await axios.get(process.env.VUE_APP_BASE_URL + "/crossbills");
+    this.rivers = rivers.data;
+    this.regions = regions.data;
+    this.crossbills = crossbills.data;
+    this.loading = false;
   },
 
 }
@@ -105,5 +142,9 @@ export default {
         border: 8px solid rgb(88, 190, 170);
         width: 1000px;
         margin: 0 auto;
+    }
+
+    .leaflet-popup-content-wrapper {
+      max-height: 50px;
     }
 </style>

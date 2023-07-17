@@ -4,7 +4,7 @@ development:
     # Defines the default client. (required)
     default:
       # Mongoid can connect to a URI accepted by the driver:
-      uri: mongodb+srv://emilychaplais:aNKvWOHx9ZpNma5a@cluster0.xi2v8rd.mongodb.net/geospatial-api?retryWrites=true&w=majority
+      uri: <%= MONGO_URI %>
 
       # Otherwise define the parameters separately.
       # This defines the name of the default database that Mongoid can connect to.

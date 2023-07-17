@@ -1,25 +1,29 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <div class="button-container">
-      <button class="show-layer-button" @click="showLayer = !showLayer">{{showLayer ? "Hide countries layer" : "Show countries layer"}}</button>
+    <h1>Mapping app</h1>
+    <div class="buttons-container">
+      <Button :text="showRiversLayer ? 'Hide rivers' : 'Show rivers'" @click="showRiversLayer = !showRiversLayer"/>
+      <Button :text="showRegionsLayer ? 'Hide regions' : 'Show regions'" @click="showRegionsLayer = !showRegionsLayer"/>
+      <Button :text="showCrossbillsLayer ? 'Hide Scottish Crossbills (UK only)' : 'Show Scottish Crossbills (UK only)'" @click="showCrossbillsLayer = !showCrossbillsLayer"/>
     </div>
-    <Map :showLayer="showLayer"/>
+    <Map :showRegionsLayer="showRegionsLayer" :showRiversLayer="showRiversLayer" :showCrossbillsLayer="showCrossbillsLayer"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import Map from './components/Map.vue'
+import Button from './components/Button.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld, Map
+    Map, Button
   },
   data() {
     return {
-      showLayer: false
+      showRiversLayer: false,
+      showRegionsLayer: false,
+      showCrossbillsLayer: false
     }
   },
 }
@@ -55,5 +59,12 @@ export default {
 
 .button-container {
   margin-bottom: 20px;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  column-gap: 20px;
 }
 </style>

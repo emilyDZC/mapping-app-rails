@@ -6,6 +6,10 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+Dotenv::Railtie.load
+
+MONGO_URI = ENV['MONGO_URI']
+
 module MappingAppRails
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

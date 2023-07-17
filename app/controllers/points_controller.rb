@@ -20,12 +20,12 @@ class PointsController < ApplicationController
         :"$geoIntersects" => {
           :"$geometry" => {
             :type => "Point",
-            :coordinates => [params[:lat], params[:long]]
+            :coordinates => [params[:long], params[:lat]]
           }
         }
       }
     )
-    
+
     render json: @point
   end
 
